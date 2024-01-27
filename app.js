@@ -18,7 +18,8 @@ const port = process.env.PORT || 5000;
 
 // Connect to Database  
 connectDB();
-
+// Using Middlewares
+app.use(express.static(path.join(path.resolve(), "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));

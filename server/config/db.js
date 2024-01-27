@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 const connectDB = async()=> {
-  // const  connectionString= `mongodb+srv://avinash:avinash123@cluster0.4c8ksxp.mongodb.net/next?retryWrites=true&w=majority`;
+
   try {
     mongoose.set('strictQuery', false);
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`Database Connected: ${conn.connection.host}`);
+    // const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect("mongodb://127.0.0.1:27017", {
+      dbName: "backend",
+    })
+    .then(() => console.log("Database Connected"))
+    .catch((e) => console.log(e));
+    // console.log(`Database Connected: ${conn.connection.host}`);
   } catch (error) {
     console.log(error);
   }
