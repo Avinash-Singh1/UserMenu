@@ -97,6 +97,7 @@ exports.homepage = async (req, res) => {
 exports.about = async (req, res) => {
   const locals = {
     title: "About",
+    isLoginPage: false,
     description: "Free NodeJs User Management System",
   };
 

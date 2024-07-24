@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 router.use(cookieParser());
 // db connection table 2 for User login 
 mongoose
-  .connect("mongodb://127.0.0.1:27017", {
+  .connect("mongodb+srv://avinash:avinash123@cluster0.4c8ksxp.mongodb.net/next?retryWrites=true&w=majority", {
     dbName: "backend",
   })
   .then(() => console.log("Database Connected2"))
@@ -121,7 +121,8 @@ router.post("/login", async (req, res) => {
 
     //register 
     router.get("/product", async (req, res) => {
-        res.render("product");
+        res.render("product",{isLoginPage: false,
+          title: 'Registration', description: 'Registration Page'});
     });
 
     router.post('/createOrder', customerController.createOrder);
