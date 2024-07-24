@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
       
         res.cookie("token", token, {
           httpOnly: true,
-          expires: new Date(Date.now() + 60 * 1000),
+          expires: new Date(Date.now() + 10 * 60 * 1000),
         });
         res.redirect("/");
 
