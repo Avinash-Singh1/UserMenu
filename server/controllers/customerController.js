@@ -1,5 +1,39 @@
 const Customer = require("../models/Customer");
 const mongoose = require("mongoose");
+const nodemailer = require('nodemailer');
+// -------------new imports 
+const Razorpay = require('razorpay'); 
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
+const razorpayInstance = new Razorpay({
+    key_id: RAZORPAY_ID_KEY,
+    key_secret: RAZORPAY_SECRET_KEY
+});
+
+
+const renderProductPage = async(req,res)=>{
+
+  try {
+      
+      res.render('product');
+
+  } catch (error) {
+      console.log(error.message);
+  }
+
+}
+
+// node mailer instance start 
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'avinash202002@gmail.com',
+    pass: 'zzkqfjvbwnpfafob'
+  }
+});
+
+// node mailer instance end
 
 /**
  * GET /
@@ -34,6 +68,8 @@ exports.homepage = async (req, res) => {
       current: page,
       pages: Math.ceil(count / perPage),
       messages,
+      isLoginPage: false,
+       title: 'Registration', description: 'Registration Page'
     });
   } catch (error) {
     console.log(error);
@@ -78,7 +114,7 @@ exports.about = async (req, res) => {
 exports.addCustomer = async (req, res) => {
   const locals = {
     title: "Add New Customer - NodeJs",
-    description: "Free NodeJs User Management System",
+    description: "Free NodeJs User Management System",isLoginPage: false
   };
 
   res.render("customer/add", locals);
@@ -101,8 +137,28 @@ exports.postCustomer = async (req, res) => {
 
   try {
     await Customer.create(newCustomer);
-    await req.flash("info", "New customer has been added.");
 
+    
+var mailOptions = {
+  from: 'avinash202002@gmail.com',
+  to: req.body.email,
+  subject: 'Appointment booked successfully',
+  html: `
+    <p>Hello,Avinash</p>
+    <p>This is a test email from Node.js with a well-structured message and an image linked below:</p>
+    <p><img src="https://t4.ftcdn.net/jpg/01/20/28/25/360_F_120282530_gMCruc8XX2mwf5YtODLV2O1TGHzu4CAb.jpg" alt="Image"></p>
+    <p>Best regards,</p>
+    <p>Your Name</p>
+  `
+};
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+    await req.flash("info", "New customer has been added.");
     res.redirect("/");
   } catch (error) {
     console.log(error);
@@ -125,6 +181,8 @@ exports.view = async (req, res) => {
     res.render("customer/view", {
       locals,
       customer,
+       isLoginPage: false,
+       title: 'Registration', description: 'Registration Page'
     });
   } catch (error) {
     console.log(error);
@@ -147,6 +205,8 @@ exports.edit = async (req, res) => {
     res.render("customer/edit", {
       locals,
       customer,
+       isLoginPage: false,
+       title: 'Registration', description: 'Registration Page'
     });
   } catch (error) {
     console.log(error);
@@ -167,7 +227,8 @@ exports.editPost = async (req, res) => {
       details: req.body.details,
       updatedAt: Date.now(),
     });
-    await res.redirect(`/edit/${req.params.id}`);
+    // await res.redirect(`/edit/${req.params.id}`);
+    await res.redirect(`/`);
 
     console.log("redirected");
   } catch (error) {
@@ -212,8 +273,50 @@ exports.searchCustomers = async (req, res) => {
     res.render("search", {
       customers,
       locals,
+       isLoginPage: false,
+       title: 'Registration', description: 'Registration Page'
     });
   } catch (error) {
     console.log(error);
   }
 };
+
+
+// ------------------New code 
+exports.createOrder = async(req,res)=>{
+  try {
+      const amount = req.body.amount*100
+      const options = {
+          amount: amount,
+          currency: 'INR',
+          receipt: 'aavinash.singgh@gmail.com'
+          // receipt: 'razorUser@gmail.com'
+      }
+
+      razorpayInstance.orders.create(options, 
+          (err, order)=>{
+              if(!err){
+                  res.status(200).send({
+                      success:true,
+                      msg:'Order Created',
+                      order_id:order.id,
+                      amount:amount,
+                      key_id:RAZORPAY_ID_KEY,
+                      product_name:req.body.name,
+                      description:req.body.description,
+                      contact:"8567345632",
+                      name: "Ram",
+                      email: "ram@gmail.com"
+                  });
+              }
+              else{
+                  res.status(400).send({success:false,msg:'Something went wrong!'});
+              }
+          }
+      );
+
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+

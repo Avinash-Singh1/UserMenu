@@ -1,3 +1,4 @@
+    <link rel="stylesheet" href="styles.css" />
 <div class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Dashboard</h1>
   <div class="btn-toolbar mb-2 mb-md 0">
@@ -22,7 +23,7 @@
     <thead>
       <tr>
         <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
+        <th scope="col">TelePhone</th>
         <th scope="col">Email</th>
         <th scope="col" class="text-end">Action</th>
       </tr>
@@ -31,8 +32,8 @@
     <tbody>
       <% customers.forEach(element => { %>
         <tr class="align-middle">
-          <td><%= element.firstName %></td>
-          <td><%= element.lastName %></td>
+          <td><%= element.firstName %> <%= element.lastName %></td>
+          <td><%= element.tel %></td>
           <td><%= element.email %></td>
           <td class="text-end">
 
