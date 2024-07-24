@@ -10,9 +10,7 @@ const bcrypt = require('bcrypt');
 router.use(cookieParser());
 // db connection table 2 for User login 
 mongoose
-  .connect("mongodb+srv://avinash:avinash123@cluster0.4c8ksxp.mongodb.net/next?retryWrites=true&w=majority", {
-    dbName: "backend",
-  })
+  .connect(process.env.MONGODB_URI,{dbName: "backend"})
   .then(() => console.log("Database Connected2"))
   .catch((e) => console.log(e));
 

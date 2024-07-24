@@ -20,9 +20,13 @@
         <input class="myinput" type="password" name="password" placeholder="Password" />
 
         <p class="error"><%= locals.message %></p>
-
+        <div class="formbtn" style="display: flex;justify-content: space-around;">
         <button class="mybutton" type="submit">Log In</button>
-        <a href="/register">Register</a>
+        <button class="mybutton" type="submit"><a href="/register"  style="text-decoration: none;color: white;">Register</a></button>
+        </div>
+        <!-- <button class="mybutton" type="submit">Log In</button>
+        <button class="mybutton" type="submit"><a href="/register">Register</a></button> -->
+        <!-- <a href="/register">Register</a> -->
       </form>
     </main>
   </body>
